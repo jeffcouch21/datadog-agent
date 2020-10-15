@@ -37,7 +37,7 @@ func resolveRuntimeArch() {
 var syscallPrefix string
 var ia32SyscallPrefix string
 
-func getSyscallFnName(name string) string {
+func getSyscallPrefix() string {
 	if syscallPrefix == "" {
 		syscall, err := manager.GetSyscallFnName("open")
 		if err != nil {
@@ -51,7 +51,11 @@ func getSyscallFnName(name string) string {
 		}
 	}
 
-	return strings.ToLower(syscallPrefix) + name
+	return strings.ToLower(syscallPrefix)
+}
+
+func getSyscallFnName(name string) string {
+	return getSyscallPrefix() + name
 }
 
 func getIA32SyscallFnName(name string) string {
@@ -92,6 +96,8 @@ const (
 	Entry = 1 << 0
 	// Exit indicates that the exit kretprobe should be expanded
 	Exit = 1 << 1
+	// ExpandTime32 indicates that the _time32 suffix should be added to the provided probe if needed
+	ExpandTime32 = 1 << 2
 
 	// EntryAndExit indicates that both the entry kprobe and exit kretprobe should be expanded
 	EntryAndExit = Entry | Exit
@@ -105,6 +111,14 @@ func ExpandSyscallProbes(probe *manager.Probe, flag int, compat ...bool) []*mana
 
 	if len(RuntimeArch) == 0 {
 		resolveRuntimeArch()
+	}
+
+	if flag&ExpandTime32 == ExpandTime32 {
+		// check if the _time32 symbol should be expanded
+		if getSyscallPrefix() == "SyS_" {
+			return probes
+		}
+		probe.Section += "_time32"
 	}
 
 	for _, section := range expandSyscallSections(syscallName, flag, compat...) {

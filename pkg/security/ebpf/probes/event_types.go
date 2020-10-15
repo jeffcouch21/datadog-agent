@@ -266,7 +266,7 @@ var SelectorsPerEventType = map[eval.EventType][]manager.ProbesSelector{
 				manager.ProbeIdentificationPair{UID: SecurityAgentUID, Section: "utimes"}, EntryAndExit, true),
 			},
 			&manager.AllOf{Selectors: ExpandSyscallProbesSelector(
-				manager.ProbeIdentificationPair{UID: SecurityAgentUID, Section: "utimes_time32"}, EntryAndExit),
+				manager.ProbeIdentificationPair{UID: SecurityAgentUID, Section: "utimes"}, EntryAndExit | ExpandTime32),
 			},
 		}},
 		&manager.OneOf{Selectors: []manager.ProbesSelector{
@@ -274,7 +274,7 @@ var SelectorsPerEventType = map[eval.EventType][]manager.ProbesSelector{
 				manager.ProbeIdentificationPair{UID: SecurityAgentUID, Section: "utimensat"}, EntryAndExit, true),
 			},
 			&manager.AllOf{Selectors: ExpandSyscallProbesSelector(
-				manager.ProbeIdentificationPair{UID: SecurityAgentUID, Section: "utimensat_time32"}, EntryAndExit),
+				manager.ProbeIdentificationPair{UID: SecurityAgentUID, Section: "utimensat"}, EntryAndExit | ExpandTime32),
 			},
 		}},
 		&manager.OneOf{Selectors: []manager.ProbesSelector{
