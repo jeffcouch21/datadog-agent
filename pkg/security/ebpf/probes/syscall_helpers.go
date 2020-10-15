@@ -115,7 +115,7 @@ func ExpandSyscallProbes(probe *manager.Probe, flag int, compat ...bool) []*mana
 
 	if flag&ExpandTime32 == ExpandTime32 {
 		// check if the _time32 symbol should be expanded
-		if getSyscallPrefix() == "SyS_" {
+		if getSyscallPrefix() == "sys_" {
 			return probes
 		}
 		probe.Section += "_time32"
